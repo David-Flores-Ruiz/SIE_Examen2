@@ -6,7 +6,7 @@
 
 #include "TeraTerm.h"
 
-#define ARRAY_mod_hours   &modified_hours[0]	//Direccion del arreglo de Horas
+#define ARRAY_COLORES   &coloresRGB[0]	//Direccion del arreglo de Horas
 #define ARRAY_mod_minutes &modified_minutes[0]	//Direccion del arreglo de Minutos
 #define ARRAY_mod_seconds &modified_seconds[0]	//Direccion del arreglo de Segundos
 
@@ -60,7 +60,7 @@ uint8_t string_Year[3]  = "AA "; /*! Year */
 
 //** Propose to modify the TIME or the DATE actual*/
 //** In the beginning will start in the last day of this year (2019)*/
-uint8_t modified_hours[4] 	= {'2', '3'};
+uint8_t coloresRGB[21] 	= {0};
 uint8_t modified_minutes[4] = {'5', '9'};
 uint8_t modified_seconds[3] = {'0', '0'};
 
@@ -100,9 +100,9 @@ void TeraTerm_Echo_UART0(void) {
 
 		g_key_UART0_PC = g_mail_box_uart_0.mailBox; //** GET THE ASCII PRESSED */
 
-		if (g_FSM_status_flags.submenu_1 == TRUE){
+
 			g_new_key_UART0 = TRUE;	//** Bandera para detectar una presion de tecla*/
-		}
+
 
 		if (g_FSM_status_flags.submenu_2 == TRUE){
 			g_new_key_UART0 = TRUE;	//** Bandera para detectar una presion de tecla*/
@@ -125,19 +125,116 @@ void TeraTerm_Echo_UART0(void) {
 	}
 }
 
+void FSM_Submenu_1(void) {
+
+	TeraTerm_Echo_UART0();	//** HERE I GET THE ASCII THAT WAS PRESSED */
+	UART0_key = g_key_UART0_PC; // Actualizo mi current State segun la tecla presionada
+
+	if (g_new_key_UART0 == TRUE){
+		i_sub1++;		// Numero de veces que se presiono una tecla
+		g_new_key_UART0 = FALSE;
+	}
+
+//
+	if (i_sub1 == 1) {
+		coloresRGB[0] = UART0_key;		// ASCII en decimal
+	}
+
+	if (i_sub1 == 2) {
+		//** WAIT for COMA ','
+	}
+
+	if (i_sub1 == 3) {
+		coloresRGB[2] = UART0_key;		// ASCII en decimal
+	}
+
+	if (i_sub1 == 4) {
+		//** WAIT for PUNTO Y COMA ';'
+	}
+//
+	if (i_sub1 == 5) {
+		coloresRGB[4] = UART0_key;		// ASCII en decimal
+	}
+
+	if (i_sub1 == 6) {
+		//** WAIT for COMA ','
+	}
+
+	if (i_sub1 == 7) {
+		coloresRGB[6] = UART0_key;		// ASCII en decimal
+	}
+
+	if (i_sub1 == 8) {
+		//** WAIT for PUNTO Y COMA ';'
+	}
+//
+	if (i_sub1 == 9) {
+		coloresRGB[8] = UART0_key;		// ASCII en decimal
+	}
+
+	if (i_sub1 == 10) {
+		//** WAIT for COMA ','
+	}
+
+	if (i_sub1 == 11) {
+		coloresRGB[10] = UART0_key;		// ASCII en decimal
+	}
+
+	if (i_sub1 == 12) {
+		//** WAIT for PUNTO Y COMA ';'
+	}
+//
+	if (i_sub1 == 13) {
+		coloresRGB[12] = UART0_key;		// ASCII en decimal
+	}
+
+	if (i_sub1 == 14) {
+		//** WAIT for COMA ','
+	}
+
+	if (i_sub1 == 15) {
+		coloresRGB[14] = UART0_key;		// ASCII en decimal
+	}
+
+	if (i_sub1 == 16) {
+		//** WAIT for PUNTO Y COMA ';'
+	}
+//
+	if (i_sub1 == 17) {
+		coloresRGB[16] = UART0_key;		// ASCII en decimal
+	}
+
+	if (i_sub1 == 18) {
+		//** WAIT for COMA ','
+	}
+
+	if (i_sub1 == 19) {
+		coloresRGB[18] = UART0_key;		// ASCII en decimal
+	}
+
+	if (i_sub1 == 20) {
+		//** WAIT for PUNTO Y COMA ';'
+	}
+//
+	if ( (UART0_key == ENTER) || (i_sub1 == 21) ) {
+		UART_put_string(UART_0, "\033[15;12H"); // Mueve una fila abajo
+		UART_put_string(UART_0, "Secuencia Guardada! :)\r");
+		g_new_key_UART0 = FALSE;
+		i_sub1 = 0;		//**Reinicio del arreglo de modoficar TIME*/
+		g_FSM_status_flags.submenu_1 = FALSE; //** Termina la FSM */
+	}
+}
+
 void TeraTerm_MENU_FSM(void) {
 
 	static State_t current_state = MENU_INICIAL; //** Estado Inicial del Sistema */
-
-	RTC_BCD_TIME_Registers();	//** Actualiza string de los registros del RTC*/
-	RTC_BCD_DATE_Registers();	//** Actualiza string de los registros del RTC*/
 
 	TeraTerm_Echo_UART0();	//** HERE I GET THE ASCII THAT WAS PRESSED */
 
 	UART0_key = g_key_UART0_PC; // Actualizo mi current State segun la tecla presionada
 
 	delay(500);	//** Evitar demasiado refresh en TeraTerm mejora
-					// 	 la calidad del usuario con la interfaz menu */
+				// 	 la calidad del usuario con la interfaz menu */
 
 	switch (current_state)
 	{
@@ -554,9 +651,9 @@ void submenu8(void) {
 	UART_put_string(UART_0, "\033[17;10H"); // Mueve una fila abajo
 }
 
-uint8_t* Get_modified_hours(void) {
-	uint8_t* ptr_modified_hours = ARRAY_mod_hours;
-	return (ptr_modified_hours);
+uint8_t* Get_coloresRGB(void) {
+	uint8_t* ptr_coloresRGB = ARRAY_COLORES;
+	return (ptr_coloresRGB);
 }
 
 uint8_t* Get_modified_minutes(void) {
@@ -584,56 +681,7 @@ uint8_t* Get_modified_year(void) {
 	return (ptr_modified_year);
 }
 
-void FSM_Submenu_1(void) {
-	if (g_new_key_UART0 == TRUE){
-		i_sub1++;		// Numero de veces que se presiono una tecla
-		g_new_key_UART0 = FALSE;
-	}
 
-	if (i_sub1 == 1){
-		modified_hours[0] = UART0_key;		// ASCII en decimal
-	}
-
-	if (i_sub1 == 2){
-		modified_hours[1] = UART0_key;		// ASCII en decimal
-	}
-
-	if (i_sub1 == 3){
-		//** WAIT for BARRA diagonal '/'
-	}
-
-	if (i_sub1 == 4){
-		modified_minutes[0] = UART0_key;	// ASCII en decimal
-	}
-
-	if (i_sub1 == 5){
-		modified_minutes[1] = UART0_key;	// ASCII en decimal
-	}
-
-	if (i_sub1 == 6){
-		//** WAIT for BARRA diagonal '/'
-	}
-
-	if (i_sub1 == 7){
-		modified_seconds[0] = UART0_key;		// ASCII en decimal
-	}
-
-	if (i_sub1 == 8){
-		modified_seconds[1] = UART0_key;		// ASCII en decimal
-	}
-
-	if (UART0_key == ENTER) {
-		UART_put_string(UART_0, "\033[14;10H"); // Mueve una fila abajo
-		UART_put_string(UART_0, "La hora ha sido cambiada! :)\r");
-		UART_put_string(UART_0, "\033[15;10H"); // Mueve una fila abajo
-		RTC_write_Hours();		/** Configurado para MODIFICAR el registro de HORAS   */
-		RTC_write_Minutes();	/** Configurado para MODIFICAR el registro de MINUTOS */
-		RTC_write_Seconds();	/** Configurado para MODIFICAR el registro de SEGUNDOS*/
-		g_new_key_UART0 = FALSE;
-		i_sub1 = 0;		//**Reinicio del arreglo de modoficar TIME*/
-		g_FSM_status_flags.submenu_1 = FALSE; //** Termina la FSM */
-	}
-}
 
 void FSM_Submenu_2(void) {
 	if (g_new_key_UART0 == TRUE){

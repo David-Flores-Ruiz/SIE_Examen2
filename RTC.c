@@ -188,44 +188,6 @@ uint8_t RTC_Get_Minutes (void) {
 	return (Minutes_in_decimal);
 }
 
-void RTC_write_Hours(void)
-{
-	uint8_t* ptr_modified_hours = Get_modified_hours(); // Horas en ASCII equivalente en Decimal
-
-	uint8_t modified_DEC = 0;
-	uint8_t modified_UNI = 0;
-	uint8_t new_HOURS_hex = 0;
-
-	modified_DEC = (uint8_t)*(ptr_modified_hours + 0);
-	modified_UNI = (uint8_t)*(ptr_modified_hours + 1);
-
-	modified_DEC = (modified_DEC - 48) << 4;	//** Para llegar al inicio de la tabla ASCII*/
-	modified_UNI = (modified_UNI - 48) << 0; 	//** Para llegar al inicio de la tabla ASCII*/
-
-	new_HOURS_hex = modified_DEC + modified_UNI;
-
-
-	uint8_t acknowledge = 0xF0;
-	I2C_start();//** It configures de I2C in transmitting mode and generates the start signal */
-
-	I2C_write_byte(RTC_ADDRESS_WRITE);//** Writing RTC address in the data register */
-	I2C_wait();	//** Checking if the I2C module is busy */
-	acknowledge = I2C_get_ack_or_nack(); /* Waiting for the acknowledge, this function is able to detect
-	 // Return 0: if an acknowledge was received!!!	 * if an acknowledge was received by checking the RXAK
-	 */
-
-	I2C_write_byte( RTC_HOUR );	//** Writing the Register Address */
-	I2C_wait();	//** Checking if the I2C module is busy */
-	acknowledge = I2C_get_ack_or_nack(); /* Waiting for the acknowledge, this function is able to detect
-	 // Return 0: if an acknowledge was received!!!	 * if an acknowledge was received by checking the RXAK
-
-	 */
-	I2C_write_byte(INITIAL_0x00 | new_HOURS_hex);	//** Writing the Register Address */
-	I2C_wait();	//** Checking if the I2C module is busy */
-	acknowledge = I2C_get_ack_or_nack();// Waiting for the acknowledge, this function is able to detect
-	I2C_stop();	//** Generating stop signal */
-}
-
 void RTC_read_Hours(void)
 {
 	uint8_t aux_Unit = 0;

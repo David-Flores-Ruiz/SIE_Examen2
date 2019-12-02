@@ -75,7 +75,7 @@ void submenu7 (void);
 void submenu8 (void);
 
 
-uint8_t* Get_modified_hours(void);
+uint8_t* Get_coloresRGB(void);
 uint8_t* Get_modified_minutes(void);
 uint8_t* Get_modified_seconds(void);
 

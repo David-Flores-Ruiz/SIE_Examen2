@@ -49,26 +49,37 @@ int main(void)
 
 
 	TeraTerm_Menu(); /**Show the initial Menu for the User*/
-
-	I2C_init(I2C_0, SYSTEM_CLOCK, BAUD_RATE);
-
-	RTC_write_Seconds();	/** Configurado para Inicializar el registro de Segundos*/
-	RTC_write_Minutes();	/** Configurado para Inicializar el registro de Minutos */
-	RTC_write_Hours();		/** Configurado para Inicializar el registro de Horas */
-	RTC_write_DATE();
-	RTC_write_MONTH();
-	RTC_write_YEAR();
-
-	display_init();		//** Inicializa matriz de LEDS*/
-	display_clear();	//** Limpia pantalla 		  */
+	static uint8_t* array_Secuencia = 0;
+	uint8_t i = 0;
 
 	while (1) {
+		FSM_Submenu_1();
 
-#ifdef DEBUG_ON
-		RTC_Print_in_MCUXpresso_Console();	//** Only for Debug the RTC registers */
-#endif
+		array_Secuencia = Get_coloresRGB();
 
-		TeraTerm_MENU_FSM();
+		if ( ((uint8_t)*array_Secuencia + i) != 0 )
+		{
+			switch ((uint8_t) *(array_Secuencia + i)) {
+			case 'R':
+
+				break;
+			case 'V':
+
+				break;
+			case 'A':
+
+				break;
+			case 'B':
+
+				break;
+			case 'C':
+
+				break;
+
+			default:
+				break;
+			}
+		}
 
 	}
 
@@ -76,4 +87,7 @@ int main(void)
 }
 
 
+#ifdef DEBUG_ON
+
+#endif
 
